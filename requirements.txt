@@ -67,6 +67,7 @@ imageio==2.6.1
 imagesize==1.2.0
 importlib-metadata==1.5.0
 intervaltree==3.0.2
+invoke==1.4.1
 ipykernel==5.1.4
 ipython==7.12.0
 ipython-genutils==0.2.0
@@ -163,7 +164,9 @@ pytest-astropy-header==0.1.2
 pytest-doctestplus==0.5.0
 pytest-openfiles==0.4.0
 pytest-remotedata==0.3.2
+python-arango==5.4.0
 python-dateutil==2.8.1
+python-dotenv==0.14.0
 python-jsonrpc-server==0.3.4
 python-language-server==0.31.7
 pytz==2019.3
@@ -176,6 +179,7 @@ QtAwesome==0.6.1
 qtconsole==4.6.0
 QtPy==1.9.0
 requests==2.22.0
+requests-toolbelt==0.9.1
 rope==0.16.0
 Rtree==0.9.3
 ruamel-yaml==0.15.87
