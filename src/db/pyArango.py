@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pyArango.connection import *
+from pyArango.collection import Collection, Edges, Field
 
 load_dotenv()
 a_user  = os.getenv('ARANGO_USER')
@@ -25,19 +26,21 @@ related_skills = db['relatedSkill']
 job_skills = db['jobSkills']
 
 # VIEWS
-allView = db['allView']
-
+print(f"search Views present: `allView`: {db.hasCollection('allView')} ")
+allView = db.collections['allView']
 
 print('\n====== NODE COUNT ======\n')
 print(f"There are {skills.count()} '{skills.name}' in the db.")
 print(f"There are {jobs.count()} '{jobs.name}' in the db.")
-
 
 print('\n====== EDGE COUNT ======\n')
 print(f"There are {broader_jobs.count()} '{broader_jobs.name}' in the db.")
 print(f"There are {broader_skills.count()} '{broader_skills.name}' in the db.")
 print(f"There are {related_skills.count()} '{related_skills.name}' in the db.")
 print(f"There are {job_skills.count()} '{job_skills.name}' in the db.")
+
+print('\n====== VIEW COUNT ======\n')
+
 
 
 aql = "FOR x IN skills RETURN COUNT(x)"
