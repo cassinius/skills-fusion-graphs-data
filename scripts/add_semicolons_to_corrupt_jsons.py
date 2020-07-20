@@ -42,7 +42,7 @@ def print_stats(file):
     for idx, entry in enumerate(entries):
       min_len = len(entry) if len(entry) < min_len else min_len
       max_len = len(entry) if len(entry) > max_len else max_len
-      avg_len = ( len(entry) + avg_len * (idx) ) / (idx + 1)
+      avg_len = ( len(entry) + avg_len * idx ) / (idx + 1)
     print(f'Scanned {len(entries)} `{data["filename"]}` entries.')
     print(f'Minimum related entries length was {min_len}')
     print(f'Maximum related entries length was {max_len}')
@@ -53,3 +53,4 @@ if __name__ == "__main__":
   correct_jsons()
   for file in [SKILLS_JSON, JOBS_JSON]:
     print_stats(file)
+
