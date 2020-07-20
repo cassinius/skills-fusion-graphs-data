@@ -7,14 +7,10 @@ REG_1 = re.compile(r"[\r\n\t\W0-9()-]")
 REG_2 = re.compile(r"\s+.\s+")
 REG_3 = re.compile(r"\s{2,}")
 
-
-EXT = '.json'
 DATA_DIR = Path('data')
 ESCO_DIR = DATA_DIR / 'esco'
 ONET_DIR = DATA_DIR / 'onet'
-
-REL_SKILLS = DATA_DIR / ('cleaned_related_skills' + EXT)
-REL_JOBS = DATA_DIR / ('cleaned_related_jobs' + EXT)
+REL_DIR = DATA_DIR / 'related'
 
 CORPUS_FILE = Path('/ML/corpora/skillsjobs.txt')
 
@@ -28,8 +24,8 @@ def strip_ws(str):
 """
 def add_related_entries():
   related_arr = []
-  for file in [REL_JOBS, REL_SKILLS]:
-    with open(file) as f:
+  for file in os.listdir(REL_DIR):
+    with open(REL_DIR / file) as f:
       data = json.load(f)
       entries = data["entries"]
       print(f'Adding {len(entries)} `{data["filename"]}` to corpus..')
@@ -43,7 +39,7 @@ def add_related_entries():
 """
 def extract_esco_item(item):
   item_arr = []
-  item_arr.append(item['conceptType'])
+  # item_arr.append(item['conceptType'])
   item_arr.append(item['preferredLabel'])
   item_arr.append(strip_ws(item['description']))
   item_arr.append(' '.join([l.strip() for l in item['altLabels'] if l is not None ]))
@@ -69,7 +65,7 @@ def add_esco_entries():
 
 if __name__ == "__main__":
   corpus = []
-  # corpus.extend(add_related_entries())
-  # corpus.extend(add_esco_entries())
+  corpus.extend(add_related_entries())
+  corpus.extend(add_esco_entries())
   with open(CORPUS_FILE, 'w') as f:
     f.write('\n'.join(corpus))

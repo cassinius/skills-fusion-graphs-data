@@ -3,7 +3,7 @@ from pathlib import Path
 
 EXT = '.json'
 INPUT_DIR = Path('data/corrupt_jsons')
-OUTPUT_DIR = Path('data')
+OUTPUT_DIR = Path('data/related')
 SKILLS_CORRUPT = INPUT_DIR / ('related_skills' + EXT)
 JOBS_CORRUPT = INPUT_DIR / ('related_jobs' + EXT)
 SKILLS_JSON = OUTPUT_DIR / ('cleaned_related_skills' + EXT)
