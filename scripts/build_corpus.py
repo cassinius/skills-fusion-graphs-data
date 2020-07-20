@@ -47,7 +47,6 @@ def extract_esco_item(item):
   item_arr.append(' '.join([l.strip() for l in item['hiddenLabels'] if l is not None]))
   item_arr.append(' '.join([l.strip() for l in item['broaderConceptPT'] if l is not None]))
   return ' '.join(item_arr)
-  # return item_arr
 
 
 """ Returns an array of entries in this format:
@@ -66,29 +65,65 @@ def add_esco_entries():
 
 """ Returns the whole Onet corpus
   TODO This will be a diversified & heterogeneous function collection ;-)
-
-  # df.index = [x for x in range(1, len(df.values)+1)]
-  # df.index.name = 'id'
-
   # print(df.keys())
-  # print(df['Element Name'].unique())
 """
 def add_onet_entries():
   onet_arr = []
+  
   df = pandas.read_csv(ONET_DIR / 'Abilities.txt', sep="\t", header=0)
   onet_arr.append(' '.join(df['Element Name'].unique()))
-  df = pandas.read_csv(ONET_DIR / 'Work Activities.txt', sep="\t", header=0)
-  onet_arr.append(' '.join(df['Element Name'].unique()))
+  
   df = pandas.read_csv(ONET_DIR / 'Content Model Reference.txt', sep="\t", header=0)
   for idx in df.index:
     onet_arr.append(df.iloc[idx]['Element Name'] + ' ' + df.iloc[idx]['Description'])
+  
+  df = pandas.read_csv(ONET_DIR / 'DWA Reference.txt', sep="\t", header=0)
+  onet_arr.append('\n'.join(df['DWA Title'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'Emerging Tasks.txt', sep="\t", header=0)
+  onet_arr.append('\n'.join(df['Task'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'IWA Reference.txt', sep="\t", header=0)
+  onet_arr.append('\n'.join(df['IWA Title'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'Occupation Data.txt', sep="\t", header=0)
+  for idx in df.index:
+    onet_arr.append(df.iloc[idx]['Title'] + ' ' + df.iloc[idx]['Description'])
+  
+  df = pandas.read_csv(ONET_DIR / 'Sample of Reported Titles.txt', sep="\t", header=0)
+  onet_arr.append(' '.join(df['Reported Job Title'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'Skills.txt', sep="\t", header=0)
+  onet_arr.append(' '.join(df['Element Name'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'Task Statements.txt', sep="\t", header=0)
+  onet_arr.append('\n'.join(df['Task'].unique()))
+
+  df = pandas.read_csv(ONET_DIR / 'Technology Skills.txt', sep="\t", header=0)
+  # This is e**ing slow for larger files...
+  for idx in df.index:
+    onet_arr.append(df.iloc[idx]['Example'] + ' ' + df.iloc[idx]['Commodity Title'])
+  
+  df = pandas.read_csv(ONET_DIR / 'Tools Used.txt', sep="\t", header=0)
+  # This is e**ing slow for larger files...
+  for idx in df.index:
+    onet_arr.append(df.iloc[idx]['Example'] + ' ' + df.iloc[idx]['Commodity Title'])
+  
+  df = pandas.read_csv(ONET_DIR / 'UNSPSC Reference.txt', sep="\t", header=0)
+  # This is e**ing slow for larger files...
+  for idx in df.index:
+    onet_arr.append(df.iloc[idx]['Commodity Title'] + ' ' + df.iloc[idx]['Class Title'] + ' ' + df.iloc[idx]['Family Title'])
+  
+  df = pandas.read_csv(ONET_DIR / 'Work Activities.txt', sep="\t", header=0)
+  onet_arr.append(' '.join(df['Element Name'].unique()))
+
   return onet_arr
   
 
 if __name__ == "__main__":
   corpus = []
-  # corpus.extend(add_related_entries())
-  # corpus.extend(add_esco_entries())
+  corpus.extend(add_related_entries())
+  corpus.extend(add_esco_entries())
   corpus.extend(add_onet_entries())
   with open(CORPUS_FILE, 'w') as f:
-    f.write('\n'.join(corpus))
+    f.write(re.sub("[\.',]", '', '\n'.join(corpus)))
