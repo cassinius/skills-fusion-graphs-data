@@ -1,6 +1,7 @@
 import re
 import os
 import json
+import pandas
 from pathlib import Path
 
 REG_1 = re.compile(r"[\r\n\t\W0-9()-]")
@@ -63,9 +64,31 @@ def add_esco_entries():
   return esco_arr
 
 
+""" Returns the whole Onet corpus
+  TODO This will be a diversified & heterogeneous function collection ;-)
+
+  # df.index = [x for x in range(1, len(df.values)+1)]
+  # df.index.name = 'id'
+
+  # print(df.keys())
+  # print(df['Element Name'].unique())
+"""
+def add_onet_entries():
+  onet_arr = []
+  df = pandas.read_csv(ONET_DIR / 'Abilities.txt', sep="\t", header=0)
+  onet_arr.append(' '.join(df['Element Name'].unique()))
+  df = pandas.read_csv(ONET_DIR / 'Work Activities.txt', sep="\t", header=0)
+  onet_arr.append(' '.join(df['Element Name'].unique()))
+  df = pandas.read_csv(ONET_DIR / 'Content Model Reference.txt', sep="\t", header=0)
+  for idx in df.index:
+    onet_arr.append(df.iloc[idx]['Element Name'] + ' ' + df.iloc[idx]['Description'])
+  return onet_arr
+  
+
 if __name__ == "__main__":
   corpus = []
-  corpus.extend(add_related_entries())
-  corpus.extend(add_esco_entries())
+  # corpus.extend(add_related_entries())
+  # corpus.extend(add_esco_entries())
+  corpus.extend(add_onet_entries())
   with open(CORPUS_FILE, 'w') as f:
     f.write('\n'.join(corpus))
