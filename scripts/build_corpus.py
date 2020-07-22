@@ -13,17 +13,21 @@ ESCO_DIR = DATA_DIR / 'esco'
 ONET_DIR = DATA_DIR / 'onet'
 REL_DIR = DATA_DIR / 'related'
 
-CORPUS_FILE = Path('/ML/corpora/skillsjobs.txt')
+CORPUS_DIR = Path('/ML/corpora')
+ESCO_CORPUS = CORPUS_DIR / 'esco.txt'
+ONET_CORPUS = CORPUS_DIR / 'onet.txt'
+RELATED_CORPUS = CORPUS_DIR / 'related.txt'
+INTEGRATED_CORPUS = CORPUS_DIR / 'integrated.txt'
 
 
-def strip_ws(str):
+def beautify(str):
   return REG_3.sub(' ', REG_2.sub(' ', REG_1.sub(' ', str)))
 
 
 """ Returns an array of entries in this format:
   [entry, related_1, ..related_n]
 """
-def add_related_entries():
+def collect_related_entries():
   related_arr = []
   for file in os.listdir(REL_DIR):
     with open(REL_DIR / file) as f:
@@ -42,7 +46,7 @@ def extract_esco_item(item):
   item_arr = []
   # item_arr.append(item['conceptType'])
   item_arr.append(item['preferredLabel'])
-  item_arr.append(strip_ws(item['description']))
+  item_arr.append(beautify(item['description']))
   item_arr.append(' '.join([l.strip() for l in item['altLabels'] if l is not None ]))
   item_arr.append(' '.join([l.strip() for l in item['hiddenLabels'] if l is not None]))
   item_arr.append(' '.join([l.strip() for l in item['broaderConceptPT'] if l is not None]))
@@ -52,7 +56,7 @@ def extract_esco_item(item):
 """ Returns an array of entries in this format:
   [conceptType, preferredLabels, altLabels, hiddenlabels, description, broaderConceptPT]
 """
-def add_esco_entries():
+def collect_esco_entries():
   esco_arr = []
   for file in os.listdir(ESCO_DIR):
     with open(ESCO_DIR / file) as f:
@@ -67,7 +71,7 @@ def add_esco_entries():
   TODO This will be a diversified & heterogeneous function collection ;-)
   # print(df.keys())
 """
-def add_onet_entries():
+def collect_onet_entries():
   onet_arr = []
   
   df = pandas.read_csv(ONET_DIR / 'Abilities.txt', sep="\t", header=0)
@@ -121,9 +125,28 @@ def add_onet_entries():
   
 
 if __name__ == "__main__":
-  corpus = []
-  corpus.extend(add_related_entries())
-  corpus.extend(add_esco_entries())
-  corpus.extend(add_onet_entries())
-  with open(CORPUS_FILE, 'w') as f:
-    f.write(re.sub("[\.',]", '', '\n'.join(corpus)))
+  print('Collecting ESCO entries..')
+  esco_corpus = collect_esco_entries()
+  print('Writing ESCO corpus..')
+  with open(ESCO_CORPUS, 'w') as f:
+    f.write(re.sub("[\.',]", '', '\n'.join(esco_corpus)))
+
+  print('Collecting ONET entries..')
+  onet_corpus = collect_onet_entries()
+  print('Writing ONET corpus..')
+  with open(ONET_CORPUS, 'w') as f:
+    f.write(re.sub("[\.',]", '', '\n'.join(onet_corpus)))
+  
+  print('Collecting RELATED entries..')
+  related_corpus = collect_related_entries()
+  print('Writing RELATED corpus...')
+  with open(RELATED_CORPUS, 'w') as f:
+    f.write(re.sub("[\.',]", '', '\n'.join(related_corpus)))
+
+  integrated_corpus = []
+  integrated_corpus.extend(esco_corpus)
+  integrated_corpus.extend(onet_corpus)
+  integrated_corpus.extend(related_corpus)
+  print('Writing INTEGRATED corpus..')
+  with open(INTEGRATED_CORPUS, 'w') as f:
+    f.write(re.sub("[\.',]", '', '\n'.join(integrated_corpus)))
