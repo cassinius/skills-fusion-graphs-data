@@ -75,7 +75,7 @@ def collect_onet_entries():
   onet_arr = []
   
   df = pandas.read_csv(ONET_DIR / 'Abilities.txt', sep="\t", header=0)
-  onet_arr.append(' '.join(df['Element Name'].unique()))
+  onet_arr.append('\n'.join(df['Element Name'].unique()))
   
   df = pandas.read_csv(ONET_DIR / 'Content Model Reference.txt', sep="\t", header=0)
   for idx in df.index:
@@ -95,10 +95,10 @@ def collect_onet_entries():
     onet_arr.append(df.iloc[idx]['Title'] + ' ' + df.iloc[idx]['Description'])
   
   df = pandas.read_csv(ONET_DIR / 'Sample of Reported Titles.txt', sep="\t", header=0)
-  onet_arr.append(' '.join(df['Reported Job Title'].unique()))
+  onet_arr.append('\n'.join(df['Reported Job Title'].unique()))
 
   df = pandas.read_csv(ONET_DIR / 'Skills.txt', sep="\t", header=0)
-  onet_arr.append(' '.join(df['Element Name'].unique()))
+  onet_arr.append('\n'.join(df['Element Name'].unique()))
 
   df = pandas.read_csv(ONET_DIR / 'Task Statements.txt', sep="\t", header=0)
   onet_arr.append('\n'.join(df['Task'].unique()))
@@ -119,7 +119,7 @@ def collect_onet_entries():
     onet_arr.append(df.iloc[idx]['Commodity Title'] + ' ' + df.iloc[idx]['Class Title'] + ' ' + df.iloc[idx]['Family Title'])
   
   df = pandas.read_csv(ONET_DIR / 'Work Activities.txt', sep="\t", header=0)
-  onet_arr.append(' '.join(df['Element Name'].unique()))
+  onet_arr.append('\n'.join(df['Element Name'].unique()))
 
   return onet_arr
   
